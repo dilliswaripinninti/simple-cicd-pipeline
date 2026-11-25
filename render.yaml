@@ -1,0 +1,17 @@
+# Render Blueprint. Optional: you can also create the service by hand in the dashboard.
+services:
+  - type: web
+    name: simple-cicd-pipeline
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    healthCheckPath: /health
+    # Important: GitHub Actions triggers deployments through the deploy hook,
+    # so Render must NOT auto-deploy on every push (that would skip the tests).
+    autoDeploy: false
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
+      - key: APP_VERSION
+        value: 1.0.0
